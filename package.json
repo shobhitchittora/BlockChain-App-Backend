@@ -1,0 +1,24 @@
+{
+  "name": "blockchain_backend",
+  "version": "1.0.0",
+  "description": "BlockChain Backend ",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "Blockchain",
+    "Node",
+    "JWT"
+  ],
+  "author": "Shobhit Chittora",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.16.0",
+    "express": "^4.14.1",
+    "jsonwebtoken": "^7.2.1",
+    "mongoose": "^4.8.1",
+    "morgan": "^1.8.0"
+  }
+}
