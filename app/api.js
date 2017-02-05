@@ -1,9 +1,35 @@
 var express = require('express');
 var apiRoutes = express.Router();
-var jwt= require('jsonwebtoken');
+var jwt = require('jsonwebtoken');
 
 var app = require('../index');
 var User = require('./models/user');
+
+var BlockChain = require('./blockchain');
+
+apiRoutes.get('/registrar', (req, res) => {
+    let promise = BlockChain.checkIDRegistration();
+    promise.then((jsonresp) => {
+        console.log(jsonresp);
+        res.send(jsonresp);
+    })
+});
+
+apiRoutes.get('/registrar/new', (req, res) => {
+    let promise = BlockChain.registerNewID();
+    promise.then((jsonresp) => {
+        console.log(jsonresp);
+        res.send(jsonresp);
+    });
+});
+
+apiRoutes.get('/chaincode/deploy', (req, res) => {
+    let promise = BlockChain.deployChainCode();
+    promise.then((jsonresp) => {
+        console.log(jsonresp);
+        res.send(jsonresp);
+    });
+});
 
 // un-protected path
 apiRoutes.post('/auth', (req, res) => {
@@ -84,6 +110,7 @@ apiRoutes.get('/users', (req, res) => {
         res.json(users);
     })
 });
+
 
 
 module.exports = apiRoutes;

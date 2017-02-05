@@ -51,6 +51,7 @@ app.get('/setup', function (req, res) {
     });
 });
 
-app.listen(port);
+app.listen(port).on('error',(err)=>console.log(err));
+
 console.log('Server running @ localhost: ', + port);
 
