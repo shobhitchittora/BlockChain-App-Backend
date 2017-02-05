@@ -44,14 +44,15 @@ app.get('/setup', function (req, res) {
 
     // save the sample user
     myuser.save(function (err) {
-        if (err) throw err;
+
+        if (err) { console.log(err); res.json(err) };
 
         console.log('User saved successfully');
         res.json({ success: true });
     });
 });
 
-app.listen(port).on('error',(err)=>console.log(err));
+app.listen(port).on('error', (err) => console.log(err));
 
 console.log('Server running @ localhost: ', + port);
 
