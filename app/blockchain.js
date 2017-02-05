@@ -82,6 +82,30 @@ class Blockchain {
                 return res.json();
             });
     }
+
+    invokeChainCode(func, args, chaincodeID) {
+        let body = {
+            "jsonrpc": "2.0",
+            "method": "invoke",
+            "params": {
+                "type": 1,
+                "chaincodeID": {
+                    "name": chaincodeID
+                },
+                "ctorMsg": {
+                    "function": func,
+                    "args": args
+                },
+                "secureContext": this.enrollmentID
+            },
+            "id": 2
+        };
+        
+        return fetch(this.peerAddress + '/chaincode', { method: 'POST', body: JSON.stringify(body) })
+            .then(function (res) {
+                return res.json();
+            });
+    }
 };
 
 let blockchain = new Blockchain();
