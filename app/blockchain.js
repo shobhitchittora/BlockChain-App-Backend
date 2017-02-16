@@ -60,6 +60,7 @@ class Blockchain {
     }
 
     queryChainCode(func, args, chaincodeID) {
+        console.log('func -- '+ func + '--args--' + args);
         let body = {
             "jsonrpc": "2.0",
             "method": "query",

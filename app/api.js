@@ -7,6 +7,17 @@ var User = require('./models/user');
 
 var BlockChain = require('./blockchain');
 
+
+apiRoutes.get('/', (req, res) => {
+    res.json({ message: 'Welcome to my API!' });
+});
+
+apiRoutes.get('/users', (req, res) => {
+    User.find({}, (err, users) => {
+        res.json(users);
+    })
+});
+
 apiRoutes.get('/registrar', (req, res) => {
     let promise = BlockChain.checkIDRegistration();
     promise.then((jsonresp) => {
@@ -37,6 +48,38 @@ apiRoutes.get('/chaincode/deploy', (req, res) => {
     });
 });
 
+
+apiRoutes.post('/chaincode/invoke', (req, res) => {
+    let func = req.body.func;
+    let args = req.body.args;
+    //let chaicodeID = app.get('chaicodeID');
+    if (app.get('chaicodeID') == undefined) {
+
+    }
+    console.log('FUNC -- ', func, ' --args -- ', args);
+
+
+    let chaicodeID = "256d94b34681a953b2a35c5be755158aba253c533c82458439909cb5632bc2ead43f7fdf155112cc15172efc204eb595249bfcb049947370802c82f69a78c1d3";
+
+    let promise = BlockChain.invokeChainCode(func, JSON.parse(args), chaicodeID);
+    promise.then(jsonresp => {
+        if (jsonresp.result.status == "OK") {
+            console.log('TRANSACTION ID --> ', jsonresp.result.message);
+        }
+        res.send(jsonresp);
+    }).catch(err => {
+        console.log('Err -> ', err);
+        res.end();
+    });
+
+});
+
+
+/**
+ * Encountered some erros when using /chaincode/query with the form post with 'func' as one of the field
+ * So weird
+ */
+
 apiRoutes.post('/chaincode/query', (req, res) => {
 
     let func = req.body.func;
@@ -48,32 +91,19 @@ apiRoutes.post('/chaincode/query', (req, res) => {
 
     let chaicodeID = "256d94b34681a953b2a35c5be755158aba253c533c82458439909cb5632bc2ead43f7fdf155112cc15172efc204eb595249bfcb049947370802c82f69a78c1d3";
 
+    console.log('FUNC --> ', func);
+
     let promise = BlockChain.queryChainCode(func, JSON.parse(args), chaicodeID);
     promise.then(jsonresp => {
         if (jsonresp.result.status == "OK") {
             console.log(jsonresp.result.message);
         }
         res.send(jsonresp);
+    }).catch(err => {
+        console.log('Error ==> ', err);
+        res.end();
     });
-});
 
-apiRoutes.post('/chaincode/invoke', (req, res) => {
-    let func = req.body.func;
-    let args = req.body.args;
-    //let chaicodeID = app.get('chaicodeID');
-    if (app.get('chaicodeID') == undefined) {
-
-    }
-
-    let chaicodeID = "256d94b34681a953b2a35c5be755158aba253c533c82458439909cb5632bc2ead43f7fdf155112cc15172efc204eb595249bfcb049947370802c82f69a78c1d3";
-
-    let promise = BlockChain.invokeChainCode(func, JSON.parse(args), chaicodeID);
-    promise.then(jsonresp => {
-        if (jsonresp.result.status == "OK") {
-            console.log('TRANSACTION ID --> ',jsonresp.result.message);
-        }
-        res.send(jsonresp);
-    });
 });
 
 // un-protected path
@@ -143,17 +173,6 @@ apiRoutes.use(function (req, res, next) {
         });
 
     }
-});
-
-
-apiRoutes.get('/', (req, res) => {
-    res.json({ message: 'Welcome to my API!' });
-});
-
-apiRoutes.get('/users', (req, res) => {
-    User.find({}, (err, users) => {
-        res.json(users);
-    })
 });
 
 

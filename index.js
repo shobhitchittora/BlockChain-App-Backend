@@ -1,30 +1,40 @@
 var express = require('express');
 var app = express();
 
-/*
-    Exporting app to be used by other modules
-*/
-
-module.exports = app;
-
 var mongoose = require('mongoose');
 var bodyParser = require('body-parser');
 var morgan = require('morgan');
 
 var config = require('./config');
 var User = require('./app/models/user');
-var apiRoutes = require('./app/api');
+
 
 var port = process.env.PORT || 8080;
 
-mongoose.connect(config.database);
+var mongooseOptions = { server: { socketOptions: { keepAlive: 300000, connectTimeoutMS: 30000 } }, 
+                replset: { socketOptions: { keepAlive: 300000, connectTimeoutMS : 30000 } } };       
+
+mongoose.connect(config.database,mongooseOptions);
+var connection = mongoose.connection;
+connection.on('error', console.error.bind(console,'connection error:'));
+
 app.set('superSecret', config.secret);
 
 // API MIDDLEWARES 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json());
 
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 app.use(morgan('dev'));
+
+
+/*
+    Exporting app to be used by other modules
+*/
+
+module.exports = app;
+
+//Setting API Routes
+var apiRoutes = require('./app/api');
 app.use('/api', apiRoutes);
 
 
@@ -55,4 +65,6 @@ app.get('/setup', function (req, res) {
 app.listen(port).on('error', (err) => console.log(err));
 
 console.log('Server running @ localhost: ', + port);
+
+
 
