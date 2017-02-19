@@ -2,7 +2,7 @@ var fetch = require('node-fetch');
 var config = require('../config');
 
 class Blockchain {
-
+    
     constructor() {
         this.enrollmentID = config.enrollmentID;
         this.enrollmentSecret = config.enrollmentSecret;
@@ -85,6 +85,7 @@ class Blockchain {
     }
 
     invokeChainCode(func, args, chaincodeID) {
+        console.log('func -- ' + func + '--args--' + args);
         let body = {
             "jsonrpc": "2.0",
             "method": "invoke",
