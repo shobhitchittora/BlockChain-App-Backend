@@ -60,7 +60,7 @@ class Blockchain {
     }
 
     queryChainCode(func, args, chaincodeID) {
-        console.log('func -- '+ func + '--args--' + args);
+        console.log('func -- ' + func + '--args--' + args);
         let body = {
             "jsonrpc": "2.0",
             "method": "query",
@@ -101,8 +101,15 @@ class Blockchain {
             },
             "id": 2
         };
-        
+
         return fetch(this.peerAddress + '/chaincode', { method: 'POST', body: JSON.stringify(body) })
+            .then(function (res) {
+                return res.json();
+            });
+    }
+
+    checkTransaction(transactionID) {
+        return fetch(this.peerAddress + '/transactions/' + transactionID )
             .then(function (res) {
                 return res.json();
             });

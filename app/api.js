@@ -34,6 +34,21 @@ apiRoutes.get('/registrar/new', (req, res) => {
     });
 });
 
+apiRoutes.get('/chaincode/transactions/:id', (req, res) => {
+
+    let promise = BlockChain.checkTransaction(req.params.id);
+    promise.then(jsonresp => {
+        if(jsonresp.Error)
+            console.log('Transaction not found');
+        else
+            console.log('Transaction found with timestamp - ' + jsonresp.timestamp.seconds);
+        
+        res.send(jsonresp);
+
+    }).catch(err => console.log(err));
+
+});
+
 apiRoutes.get('/chaincode/deploy', (req, res) => {
     let promise = BlockChain.deployChainCode();
     promise.then((jsonresp) => {
@@ -59,7 +74,7 @@ apiRoutes.post('/chaincode/invoke', (req, res) => {
     console.log('FUNC -- ', func, ' --args -- ', args);
 
 
-    let chaicodeID = "256d94b34681a953b2a35c5be755158aba253c533c82458439909cb5632bc2ead43f7fdf155112cc15172efc204eb595249bfcb049947370802c82f69a78c1d3";
+    let chaicodeID = "d43766b84927af0725ea9d521c990eb9ffdfb8a3f2d2eef6aa91c9f55c329a4cc5ac68dcd7c5e4bc2550d066a2debd9ec4436fe710f21e6e9add78cf71b5623d";
 
     let promise = BlockChain.invokeChainCode(func, JSON.parse(args), chaicodeID);
     promise.then(jsonresp => {
@@ -89,7 +104,7 @@ apiRoutes.post('/chaincode/query', (req, res) => {
 
     }
 
-    let chaicodeID = "256d94b34681a953b2a35c5be755158aba253c533c82458439909cb5632bc2ead43f7fdf155112cc15172efc204eb595249bfcb049947370802c82f69a78c1d3";
+    let chaicodeID = "d43766b84927af0725ea9d521c990eb9ffdfb8a3f2d2eef6aa91c9f55c329a4cc5ac68dcd7c5e4bc2550d066a2debd9ec4436fe710f21e6e9add78cf71b5623d";
 
     console.log('FUNC --> ', func);
 
